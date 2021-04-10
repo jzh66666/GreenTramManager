@@ -15,17 +15,17 @@
     http://www.springframework.org/schema/tx 
     http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-		
+	
 	<!-- 导入连库配置文件 -->
     <context:property-placeholder location="classpath:jdbc.properties" />
     
     
  	<!-- 配置DataSource，使用c3p0 -->
 	<bean name="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-        <property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/testmybatis?characterEncoding=utf-8"></property>
+        <property name="jdbcUrl" value="jdbc:mysql://121.40.133.80:3306/greentram?characterEncoding=utf-8"></property>
         <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
         <property name="user" value="root"></property>
-        <property name="password" value="000000"></property>
+        <property name="password" value="root"></property>
     </bean>
 		
 		
@@ -48,7 +48,7 @@
 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 	    <!-- 自动的去下面路径扫包，目的是加在sql映射文件(xxxMapper.xml)或者mybatis绑定的接口 -->
-		<property name="basePackage" value="com.jzh.*.dao"></property>
+		<property name="basePackage" value="com.jzh.*.mapper"></property>
 		<!-- mybtais绑定的接口其实是由mybatis自己去依靠JDK动态代理实现生产代理类，但是当前mybatis是被Spring整合了，
 		             所以将整合之后的结果也就是sqlSessionFactory这个bean注入过来，并使用它来实现给绑定的接口生成代理类 
 		-->
@@ -68,5 +68,6 @@
 	 -->
 	<tx:annotation-driven transaction-manager="txManager" />	
 		
-		
+	
+	
 </beans>

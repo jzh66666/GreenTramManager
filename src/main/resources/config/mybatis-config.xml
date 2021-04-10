@@ -6,8 +6,8 @@
     <!-- 接口绑定的映射路径 -->
 	<mappers>
 	
-		<mapper   class="com.jzh.user.dao.UserMapper"/>
-		
+		<package name="com.jzh.*.mapper"/>
+			
 	</mappers>
 
 </configuration>  
