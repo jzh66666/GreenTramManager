@@ -130,4 +130,30 @@ public class DateUtils {
 	}
 	
 	
+	/**
+	 * 根据毫秒返回年月日
+	 * 
+	 * @param lo
+	 * @return
+	 */
+	public static String MillToYYMMDD(String lo) {
+		long time = Long.parseLong(lo);
+		Date date = new Date(time);
+		SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+		return sd.format(date);
+	}
+	
+	/**
+	 * 具体时间转毫秒
+	 * @param date
+	 * @throws ParseException 
+	 */
+	public static long dateToMill(String date) throws ParseException{
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date d = dateFormat.parse(date);
+		System.out.println(d.getTime());
+		return d.getTime();
+	}
+	
 }
