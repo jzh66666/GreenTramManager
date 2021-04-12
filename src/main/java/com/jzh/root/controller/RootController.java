@@ -36,12 +36,10 @@ public class RootController {
 	 */
 	@RequestMapping("/login")
 	@ResponseBody
-	public Map<String, Object> login(HttpServletRequest request){
+	public Map<String, Object> login(HttpServletRequest request,String rootname,String password){
 		System.out.println("login----->");
 		//存放json
 		Map<String, Object> json = new HashMap<String, Object>();
-		String rootname = request.getParameter("rootname");
-		String password = request.getParameter("password");
 		//判空
 		if(rootname == null || rootname.equals("")){
 			json.put("code", -1);
