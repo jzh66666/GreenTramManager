@@ -65,7 +65,12 @@ public class StaffController {
 		json.put("data", data);
 		return json;
 	}
-	//进入添加页面
+	
+	/**
+	 * 添加页面
+	 * @param token
+	 * @return
+	 */
 	@RequestMapping("/addpage")
 	public Map<String, Object> addpage ( String token){
 		Map<String, Object> json=new HashMap();
@@ -86,7 +91,7 @@ public class StaffController {
 		json.put("msg", "请求成功");
 		Map<String, Object> rootinfo=new HashMap();
 		rootinfo.put("rootname", root.get("rootname"));
-		json.put("roorinfo", rootinfo);
+		json.put("rootinfo", rootinfo);
 		return json;
 	}
 	/**
@@ -122,7 +127,13 @@ public class StaffController {
 		json.put("code", 200);
 		json.put("msg", "请求成功");
 		
-		staffService.addstaff(name,gongzi);
+		try {
+			staffService.addstaff(name,gongzi);
+		} catch (Exception e) {
+			json.put("code", -1);
+			json.put("msg", "请输入正确数值");
+			return json;
+		}
 		
 		return json;
 	}
@@ -130,7 +141,7 @@ public class StaffController {
 	/**
 	 * 删除
 	 */
-	@RequestMapping("/edit")
+	@RequestMapping("/del")
 	public Map<String, Object>edit(String token,String id){
 		Map<String, Object> json=new HashMap();
 		
