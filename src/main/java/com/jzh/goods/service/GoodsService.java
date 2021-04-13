@@ -45,4 +45,46 @@ public class GoodsService {
 	public void edit(String id) {
 		goodsMapper.edit(id);
 	}
+	
+	/**
+	 * 添加
+	 * @param name
+	 * @param price
+	 * @param path
+	 * @param string
+	 */
+	public void add(String name, String price, String path, String time) {
+		goodsMapper.add(name,path,price,time);
+	}
+	
+	/**
+	 * 根据id查询商品
+	 * @param id
+	 * @return
+	 */
+	public Map<String, Object> queryGoodById(String id) {
+		return goodsMapper.queryOneById(id);
+	}
+	
+	/**
+	 * 更新
+	 * @param name
+	 * @param price
+	 * @param path
+	 * @param id 
+	 * @param string
+	 */
+	public void update(String name, String price, String path, String id) {
+		goodsMapper.update(name,path,price,id);
+	}
+	
+	/**
+	 * 更新
+	 * @param name
+	 * @param price
+	 * @param id
+	 */
+	public void update2(String name, String price, String id) {
+		goodsMapper.update2(name,price,id);
+	}
 }
