@@ -63,8 +63,95 @@ public class StaffController {
 		rootinfo.put("rootname", root.get("rootname"));
 		json.put("rootinfo", rootinfo);
 		json.put("data", data);
+		return json;
+	}
+	//进入添加页面
+	@RequestMapping("/addpage")
+	public Map<String, Object> addpage ( String token){
+		Map<String, Object> json=new HashMap();
+		
+		// 判空
+		if (token == null || token.equals("")) {
+			json.put("code", -2);
+			json.put("msg", "非法请求");
+			return json;
+		}
+		Map<String, Object>root=staffService.queryRootByToken(token);
+		if (root==null) {
+			json.put("code", -2);
+			json.put("msg", "登陆失效");
+			return json;
+		}
+		json.put("code", 200);
+		json.put("msg", "请求成功");
+		Map<String, Object> rootinfo=new HashMap();
+		rootinfo.put("rootname", root.get("rootname"));
+		json.put("roorinfo", rootinfo);
+		return json;
+	}
+	/**
+	 * 员工添加
+	 * @return
+	 */
+	@RequestMapping("/add")
+	public Map<String, Object> add(String token, String name, String gongzi) {
+		Map<String, Object> json = new HashMap();
+		
+		// 判空
+		if (token == null || token.equals("")) {
+			json.put("code", -2);
+			json.put("msg", "非法请求");
+			return json;
+		}
+		Map<String, Object>root=staffService.queryRootByToken(token);
+		if (root==null) {
+			json.put("code", -2);
+			json.put("msg", "登陆失效");
+			return json;
+		}
+		if (name==null||name.equals("")) {
+			json.put("code", -1);
+			json.put("msg", "请输入姓名");
+			return json;
+		}
+		if (gongzi==null||gongzi.equals("")) {
+			json.put("code", -1);
+			json.put("msg", "请输入工资");
+			return json;
+		}
+		json.put("code", 200);
+		json.put("msg", "请求成功");
+		
+		staffService.addstaff(name,gongzi);
 		
 		return json;
+	}
+	
+	/**
+	 * 删除
+	 */
+	@RequestMapping("/edit")
+	public Map<String, Object>edit(String token,String id){
+		Map<String, Object> json=new HashMap();
+		
+		
+		// 判空
+		if (token == null || token.equals("")) {
+			json.put("code", -2);
+			json.put("msg", "非法请求");
+			return json;
+		}
+		Map<String, Object>root=staffService.queryRootByToken(token);
+		if (root==null) {
+			json.put("code", -2);
+			json.put("msg", "登陆失效");
+			return json;
+		}
+		json.put("code", 200);
+		json.put("msg", "请求成功");
+		staffService.edit(id);
+		return json;
+		
 	}
 
 }

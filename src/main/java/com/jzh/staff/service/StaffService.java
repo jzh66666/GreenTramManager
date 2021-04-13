@@ -33,8 +33,26 @@ public class StaffService {
  * 获取所有员工的数据
  * @return
  */
-	public List<Map<String, Object>> queryAllStaff() {
-		
-		return staffMapper.queryAllStaff();
-	}
+public List<Map<String, Object>> queryAllStaff() {
+
+	return staffMapper.queryAllStaff();
+}
+/**
+ * 添加
+ * @param name
+ * @param gongzi
+ * @return
+ */
+public void addstaff(String name, String gongzi) {
+	
+	staffMapper.addstaff(name,gongzi,System.currentTimeMillis()+"");
+}
+
+/**
+ * 删除
+ * @param id
+ */
+public void edit(String id) {
+	staffMapper.edit(id);
+}
 }
