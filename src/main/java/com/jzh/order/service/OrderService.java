@@ -124,5 +124,14 @@ public class OrderService {
 		return orderMapper.queryUserByPhone2(phone);
 	}
 	
+	/**
+	 * 获取数据
+	 * @param phone
+	 * @return
+	 */
+	public List<Map<String, Object>> queryData(String phone) {
+		return orderMapper.queryAllOrder(phone);
+	}
+	
 	
 }

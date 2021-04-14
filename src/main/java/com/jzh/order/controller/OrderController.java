@@ -1,10 +1,17 @@
 package com.jzh.order.controller;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.jzh.manager.mapper.ManagerMapper;
 import com.jzh.order.service.OrderService;
 import com.jzh.utils.date.DateUtils;
+import com.jzh.utils.file.ExcelUtils;
 
 /**
  * 订单模块c层
@@ -327,6 +335,50 @@ public class OrderController {
 		return json;
 	}
 	
+	/**
+	 * 下载Excel
+	 * @return
+	 * @throws IOException 
+	 */
+	public Object downloadExcel(String phone,HttpServletResponse response) throws IOException{
+		ExcelUtils excel = new ExcelUtils();
+		List<Map<String, Object>> list_examinee = orderService.queryData(phone);
+		//2.写入excel中
+		//2.1初始化poi的核心类，产生一个工作簿，并创建一个sheet，且命名
+		HSSFWorkbook workbook=new HSSFWorkbook();
+		String sheetname="考生的详细信息";
+		HSSFSheet sheet = workbook.createSheet(sheetname);
+		
+		//2.2设定表头
+		String[] tableTop = { "订单id", "商品名称", "联系方式", "交易金额","性别","提问","答案","专业","身份证号","日期" };
+		String[] columnName = { "examinee_id","classs_id","examinee_name","examinee_pass","examinee_sex","examinee_question","examinee_answer","examinee_specialty","examinee_identity","examinee_time"};
+	    //创建表头
+		HSSFRow row = sheet.createRow(0);//创建第一行
+		for(int i =0;i<tableTop.length;i++)
+		{
+	     row.createCell(i).setCellValue(tableTop[i]);		
+		}
+		
+		//2.3从第二行开始向表格中添加数据
+		for(int i =0;i<list_examinee.size();i++)
+		{
+	     HSSFRow row2 = sheet.createRow(i+1);
+	 	 sheet.autoSizeColumn(i, true);//poi自带的解决表格中的数据自动适配宽度（对中文不太好使）
+		 Map<String, Object> map = list_examinee.get(i);//取出list_examinee中的map,其实就是数据库表中的一行数据	
+		
+		  for(int k=0;k<columnName.length;k++)
+		  {
+			  row2.createCell(k).setCellValue((String)map.get(columnName[k]));
+		  }
+		}
+		excel.setColumnAutoAdapter(sheet, list_examinee.size());
+        //通过流写入到工作簿中
+        OutputStream out = response.getOutputStream();
+        workbook.write(out);
+        out.close();
+	
+		
+	}
 	
 	
 }
