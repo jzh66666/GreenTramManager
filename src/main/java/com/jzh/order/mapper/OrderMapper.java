@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("orderMapper")
 public interface OrderMapper {
-	
 	@Select("select * from `order` left join `goods` on order.gid=goods.id where order.phone like #{0} and order.display=0")
 	List<Map<String, Object>> queryAllOrder(String phone);
 	
@@ -48,6 +47,11 @@ public interface OrderMapper {
 	
 	@Select("select * from `user` where phone=#{0}")
 	Map<String, Object> queryUserByPhone2(String phone);
+//	select * from `order` left join `goods` on order.gid=goods.id where order.phone like #{0} and order.display=0
+
+	@Select("select * from `order`  left join `goods` on order.gid=goods.id where order.phone like #{0} and order.display=0")
+	List<Map<String, Object>> queryPhone(String phone);
+
 	
 	
 

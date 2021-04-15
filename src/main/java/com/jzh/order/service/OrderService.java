@@ -132,6 +132,17 @@ public class OrderService {
 	public List<Map<String, Object>> queryData(String phone) {
 		return orderMapper.queryAllOrder(phone);
 	}
+
+	public List<Map<String, Object>> queryPhone(String phone) {
+		if (phone==null||phone.equals("")) {
+			phone="%%";
+		}
+		else {
+			phone="%"+phone+"%";
+		}
+		return orderMapper.queryPhone(phone);
+	}
+
 	
 	
 }
