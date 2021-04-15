@@ -39,6 +39,9 @@ public interface GoodsMapper {
 	
 	@Update("update `goods` set goodname=#{0},price=#{1} where id=#{2}")
 	void update2(String name, String price, String id);
+
+	@Select("select * from `goods` where goods.id like #{0} and goods.goodname like #{1}")
+	List<Map<String, Object>> querySp(String id, String goodname);
 	
 	
 

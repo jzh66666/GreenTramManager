@@ -87,4 +87,18 @@ public class GoodsService {
 	public void update2(String name, String price, String id) {
 		goodsMapper.update2(name,price,id);
 	}
+
+	public List<Map<String, Object>> querySP(String id, String goodname) {
+		if (id==null||id.equals("")) {
+			id="%%";
+		}else {
+			id="%"+id+"%";
+		}
+		if (goodname==null||goodname.equals("")) {
+			goodname="%%";
+		}else {
+			goodname="%"+goodname+"%";
+		}
+		return goodsMapper.querySp(id,goodname);
+	}
 }

@@ -1,10 +1,23 @@
 package com.jzh.goods.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.CellEditor;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.formula.functions.IPMT;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -253,6 +266,98 @@ public class GoodsController {
 			goodsService.update(name,price,path,id);
 			
 			return json;
+			
+		}
+		/**
+		 * excel导出
+		 * @throws UnsupportedEncodingException 
+		 */
+		@RequestMapping("excel")
+		public Map<String, Object> excel(String token,String id,String goodname,HttpServletResponse response) throws UnsupportedEncodingException{
+			//验证token
+			Map<String, Object>json=new HashMap<String, Object>();
+			if (token==null||token.equals("")) {
+				json.put("code", -2);
+				json.put("msg", "非法请求");
+			}
+			Map<String, Object>root=goodsService.queryRootByToken(token);
+			if (root==null) {
+				json.put("code", -2);
+				json.put("msg", "登陆失效");
+			}
+			json.put("code", 200);
+			json.put("msg", "登陆成功");
+			//固定写法这里写导出Excel的名字设置下载在浏览器端，等用户下载
+			String fileName="shangpin.xls";
+			response.setHeader("Content-disposition", "attachment;filename="+new String(fileName.getBytes("UTF-8"),"UTF-8"));
+			response.setContentType("APPLICATION/OCTET-STREAM;charset=UTF-8");
+			response.setHeader("Cache-Control", "no-cache");//设置头
+			response.setDateHeader("Expires", 0);//设置
+			//获取数据库查询到的所有数据
+			List<Map<String, Object>> list=goodsService.querySP(id,goodname);
+			//讲查询结果带回到页面，回显函数使用
+			Map<String, Object>map=new HashMap<String, Object>();
+			//创建导出表格的对象
+			Workbook wb=new HSSFWorkbook();
+			//创建表
+			Sheet sheet=wb.createSheet("shangpin1");
+			//获取表的第一行元素也就是0行
+			Row row=sheet.createRow(0);
+			//创建存放列的数组
+			Cell[]cell=new HSSFCell[5];
+			for (int i = 0; i < cell.length; i++) {
+				//把每一列存放到数组中
+				cell[i]=row.createCell(i);
+			}
+			//这个是写的标题头
+			//给第0行第一列元素赋值
+			cell[0].setCellValue("id");
+			//给第0行第一列元素赋值
+			cell[1].setCellValue("商品名称");
+			//给第0行第一列元素赋值
+			cell[2].setCellValue("上架日期");
+			//给第0行第一列元素赋值
+			cell[3].setCellValue("价格");
+			
+			try {
+				//循环获取从数据库中的集合每个pojo对象的数据
+				for (int i = 0; i < list.size(); i++) {
+					//查询的每个对象的
+					Map<String, Object> map2=list.get(i);
+					//设置夭插入的行为i+1(就是标题的下一行)
+					Row row1=sheet.createRow(i+1);
+					//创建存放列的数组
+					Cell[]cell2=new HSSFCell[5];
+					for (int j = 0; j < cell.length; j++) {
+						//把每一列放到数组中
+						cell2[j]=row1.createCell(j);
+					}
+					cell2[0].setCellValue(i+1);
+					cell2[1].setCellValue(map2.get("goodname").toString());
+					cell2[2].setCellValue(DateUtils.MillToHourAndMin(map2.get("createtime").toString()));
+					cell2[3].setCellValue(map2.get("price").toString());
+					
+				}
+				//输出到下载人的电脑上
+				wb.write(response.getOutputStream());
+				//刷新
+				response.getOutputStream().flush();
+				//关闭
+				response.getOutputStream().close();
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}finally {
+				try {
+					if (wb!=null) {
+						//关闭流
+						wb.close();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			return map;
 			
 		}
 		
